@@ -1,0 +1,100 @@
+*{box-sizing: border-box;}
+
+body{
+  margin: 0px;
+  padding: 0px;
+
+}
+
+.playerContainer{
+  position: relative;
+  overflow: hidden;
+  width: 340px;
+  height: 370px;
+  margin: 10px auto;
+  background-color: gray;
+  border-radius: 5px;
+}
+.imageDisplay{
+  width: inherit;
+  height: 205px;
+  background-color: #CCCCCC;
+  background: url('../images/defaultImage.jpg') no-repeat 0px 0px;
+}
+.shadow{
+  width: inherit;
+  height: 205px;
+  background: url('../images/gloss.png')
+}
+.controlsContainer{
+  position: relative;
+  width: inherit;
+  height: 165px;
+  background-color: #363F45;
+}
+.shuffle{
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 20px;
+  height: 20px;
+  background: url("../images/shuffle.png") no-repeat 0px 0px;
+  background-size: contain;
+  cursor: pointer;
+  transition: .2s;
+}
+.shuffleActive{
+  background: url("../images/shuffleActive.png") no-repeat 0px 0px;
+  background-size: contain;
+  transition: .2s;
+}
+.loop{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  background: url("../images/loop.png") no-repeat 0px 0px;
+  background-size: contain;
+  cursor: pointer;
+  transition: .2s;
+}
+.loopActive{
+  background: url("../images/loopActive.png") no-repeat 0px 0px;
+  background-size: contain;
+  transition: .2s;
+}
+
+.playPause{
+  position: absolute;
+  width: 50%;
+  height: 70px;
+  left: 25%;
+  bottom: 30px;
+}
+.prev, .next{position: absolute; width: 56px; height: 56px; z-index: 1; cursor: pointer;}
+.prev{
+  background: url("../images/back.png") no-repeat 0px 0px;
+  background-size: contain;
+  top: 10px;
+}
+.next{
+  background: url("../images/forward.png") no-repeat 0px 0px;
+  background-size: contain;
+  top: 10px;
+  right: 0px;
+}
+.play_pause{
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  left: 49px;
+  background: url("../images/play.png") no-repeat 0px 0px;
+  background-size: contain;
+  z-index: 3;
+  cursor: pointer;
+}
+.pause{
+  background: url("../images/pause.png") no-repeat 0px 0px;
+  background-size: contain;
+}
