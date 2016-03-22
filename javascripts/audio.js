@@ -1,9 +1,9 @@
 (function(){
     // songs playlist
     var playList = [
-      { song: "playlist/compton.mp3", image: "images/compton.jpg"},
+      { song: "playlist/compton.mp3", image: "images/nwa.jpg"},
       { song: "playlist/get_lucky.mp4", image: "images/daftpunk.jpg"},
-      { song: "playlist/play_that_funky.mp3", image: "images/funkymusic.jpg"},
+      { song: "playlist/play_that_funky.mp3", image: "images/wildcherry.jpg"},
       { song: "playlist/standing.m4a", image: "images/empireofsun.jpg"}
     ]
 
@@ -24,12 +24,14 @@
     // set defaults
     $('#slider1').val(songVolume);
     $(audioSource).attr('src', playList[songCount].song);
+    $('.imageDisplay').fadeIn(100).css('background-image', 'url('+ playList[songCount].image +')');
 
     setInterval(function () {
         if(audioSource.ended == true && songCount < playList.length - 1){
           songCount += 1;
           count +=1;
           $(audioSource).attr('src', playList[songCount].song);
+          $('.imageDisplay').css('background-image', 'url('+ playList[songCount].image +')');
           audioSource.play();
         }
         if(songCount == playList.length -1 && audioSource.ended == true && toLoop == true){
@@ -94,6 +96,7 @@
     function loop(){
             songCount = 0;
             $(audioSource).attr('src', playList[songCount].song);
+            $('.imageDisplay').css('background-image', 'url('+ playList[songCount].image +')');
             audioSource.play();
             return songCount;
     };
@@ -120,6 +123,7 @@
         if (songCount < playList.length - 1){
             songCount += 1;
             $(audioSource).attr('src', playList[songCount].song);
+            $('.imageDisplay').css('background-image', 'url('+ playList[songCount].image +')');
             $('.play_pause').addClass('pause');
             audioSource.play();
             isPlaying = true;
@@ -143,6 +147,7 @@
             songCount -= 1;
             count = songCount;
             $(audioSource).attr('src', playList[songCount].song);
+            $('.imageDisplay').css('background-image', 'url('+ playList[songCount].image +')');
             audioSource.play();
             isPlaying = true;
             $('.play_pause').addClass('pause');
