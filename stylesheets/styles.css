@@ -71,10 +71,42 @@ body{
   transition: .2s;
 }
 #progressMeter{
+  position: relative;
+  display: inline-block;
+  width: 250px;
+  top: 5px;
+  left: 45px;
+}
+#progressBar{
+  position: relative;
+  cursor: pointer;
+  width: 250px;
+  height: 1px;
+  background-color: whitesmoke;
+}
+#thumbScrubber{
   cursor: pointer;
   position: absolute;
+  top: -5px;
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 10px;
 }
-
+#thumbScrubber:hover{
+  top: -6px;
+  transform: scale(1.5,1.5);
+  transition: .1s;
+}
+#currentTime, #totalTime{ position: absolute; font-family: Helvetica, Arial, sans-serif; font-size: 10px; color: white; -webkit-font-smoothing: antialiased; opacity: 1; }
+#currentTime{
+  left: -5px;
+  top: 15px;
+}
+#totalTime{
+  right: -5px;
+  top: 15px;
+}
 
 
 
