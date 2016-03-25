@@ -25,9 +25,10 @@
       $scope.toLoop = false;
       $scope.toShuffle = false;
       $scope.isDragging = false;
-      $scope.scrubTop = -1000;
+      // $scope.scrubTop = -1000;
       // $scope.scrubLeft = -1000;
       $scope.seekingTime;
+      $scope.songPlay = $scope.playList[$scope.songCount].song;
 
 
       // $http.get('../js/data.json').success(function(data){
@@ -35,15 +36,26 @@
       // });
 
       $interval(function () {
+        if($scope.audioSource.ended == true && $scope.songCount < $scope.playList.length - 1){
+          $scope.songCount += 1;
+          $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+          $scope.audioSource.play();
+          $scope.isPlaying  = true;
+        }
+        if($scope.audioSource.ended == true && $scope.songCount == $scope.playList.length -1){
+          $('.play_pause').removeClass('pause');
+          $scope.isPlaying = false;
+        }
         if(!$scope.isDragging){
             var t = $scope.audioSource.currentTime;
             var d = $scope.audioSource.duration;
             var w = t / d * 100;
-            var p = document.getElementById('progressMeter').offsetLeft + document.getElementById('progressMeter').offsetWidth;
-            $scope.scrubLeft = (t / d * p) - 7;
+            var p = document.getElementById('progressMeter').offsetWidth;
+            $scope.scrubLeft = (t / d * p);
         }else {
             $scope.scrubLeft = document.getElementById('thumbScrubber').offsetLeft;
         }
+
         $scope.updateLayout();
       }, 100);
 
@@ -65,13 +77,12 @@
       };
 
       $scope.updateLayout = function(e){
-
           if(!$scope.$$phase){
               $scope.$apply();
           }
       };
 
-      $scope.togglePlay = function(){
+      $scope.togglePlay = function(count){
         if($scope.audioSource.paused && count == 0){
             $scope.audioSource.play();
             $scope.isPlaying = true;
@@ -85,26 +96,36 @@
         }
       };
 
-      // $scope.mouseMoving = function($event){
-      //     if($scope.isDragging){
-      //       $("#thumbScrubber").offset({left:$event.pageX});
-      //       var w = document.getElementById('progressMeter').offsetWidth
-      //       var d = $scope.audioSource.duration;
-      //       var s = Math.round($event.pageX / w * d);
-      //       $scope.seekingTime = s;
-      //     }
-      // };
-      //
-      // $scope.dragStart = function($event){
-      //     $scope.isDragging = true;
-      // };
-      //
-      // $scope.dragStop = function($event){
-      //     if($scope.isDragging){
-      //         $scope.videoSeek($event);
-      //         $scope.isDragging = false;
-      //     }
-      // };
+      $scope.mouseMoving = function($event){
+          if($scope.isDragging){
+            $("#thumbScrubber").offset({left:$event.pageX - 6});
+            var w = $('#progressMeter').outerWidth();
+            var parentOffset = $('#progressBar').parent().offset();
+            var mouseX = $event.pageX - parentOffset.left;
+            var d = $scope.audioSource.duration;
+            var s = Math.round(mouseX / w * d);
+            $scope.audioSource.currentTime = s;
+          }
+      };
+
+      $scope.dragStart = function($event){
+          $scope.isDragging = true;
+          $scope.audioSource.pause();
+          $("#thumbScrubber").addClass('largeScrubber');
+          $('.play_pause').removeClass('pause');
+          console.log("dragStart");
+      };
+
+      $scope.dragStop = function($event){
+          if($scope.isDragging){
+              $scope.videoSeek($event);
+              $scope.isDragging = false;
+              $scope.audioSource.play();
+              $("#thumbScrubber").removeClass('largeScrubber');
+              $('.play_pause').addClass('pause');
+              console.log("dragStop");
+          }
+      };
 
       $scope.videoSeek = function($event){
           var w = $('#progressMeter').outerWidth();

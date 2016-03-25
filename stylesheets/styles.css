@@ -5,6 +5,14 @@ body{
   padding: 0px;
 
 }
+.unselectable{
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
 .playerContainer{
   position: relative;
   overflow: hidden;
@@ -74,7 +82,8 @@ body{
   position: relative;
   display: inline-block;
   width: 250px;
-  top: 5px;
+  height: 10px;
+  top: 10px;
   left: 45px;
 }
 #progressBar{
@@ -82,30 +91,37 @@ body{
   cursor: pointer;
   width: 250px;
   height: 1px;
+  top: 5px;
   background-color: whitesmoke;
 }
 #thumbScrubber{
   cursor: pointer;
   position: absolute;
-  top: -5px;
+  top: 0px;
   width: 10px;
   height: 10px;
   background-color: white;
   border-radius: 10px;
 }
 #thumbScrubber:hover{
-  top: -6px;
+  top: 0px;
   transform: scale(1.5,1.5);
   transition: .1s;
 }
-#currentTime, #totalTime{ position: absolute; font-family: Helvetica, Arial, sans-serif; font-size: 10px; color: white; -webkit-font-smoothing: antialiased; opacity: 1; }
+.largeScrubber{
+  top: 0px;
+  transform: scale(1.5,1.5);
+  transition: .1s;
+}
+
+#currentTime, #totalTime{ position: absolute; font-family: Helvetica, Arial, sans-serif; font-size: 10px; color: white; -webkit-font-smoothing: antialiased; opacity: 0; }
 #currentTime{
-  left: -5px;
-  top: 15px;
+  left: -10px;
+  top: 20px;
 }
 #totalTime{
-  right: -5px;
-  top: 15px;
+  right: -10px;
+  top: 20px;
 }
 
 

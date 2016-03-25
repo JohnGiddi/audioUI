@@ -13,8 +13,8 @@
           <input id="rangeValue" type="text" style="width: 50px;">
       </div> -->
 
-      <div class="playerContainer ng-cloak">
-          <audio id="audio" src="{{playList[songCount].song}}"></audio>
+      <div class="playerContainer unselectable ng-cloak" ng-mousemove="mouseMoving($event)" ng-mouseup="dragStop($event)" >
+          <audio id="audio" src="{{songPlay}}"></audio>
           <div class="imageDisplay">
               <div class="shadow"></div>
           </div>
@@ -23,7 +23,7 @@
               <div class="topControls">
                   <div class="shuffle"></div>
                   <div id="progressMeter" >
-                      <div id="progressBar" ng-click="videoSeek($event)"></div>
+                      <div id="progressBar"></div>
                       <div id="thumbScrubber" ng-mousedown="dragStart($event)" style="left:{{scrubLeft}}px;"></div>
                       <div id="currentTime" ng-bind="currentTime | time">00:00</div>
                       <div id="totalTime" ng-bind="totalTime | time">00:00</div>
@@ -32,7 +32,7 @@
               </div>
               <div class="playPause">
                   <div class="prev"></div>
-                  <div class="play_pause" ng-click="togglePlay()"></div>
+                  <div class="play_pause" ng-click="togglePlay(0)"></div>
                   <div class="next"></div>
               </div>
           </div>
