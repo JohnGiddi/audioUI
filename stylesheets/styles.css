@@ -114,7 +114,7 @@ body{
   transition: .1s;
 }
 
-#currentTime, #totalTime{ position: absolute; font-family: Helvetica, Arial, sans-serif; font-size: 10px; color: white; -webkit-font-smoothing: antialiased; opacity: 0; }
+#currentTime, #totalTime{ position: absolute; font-family: Helvetica, Arial, sans-serif; font-size: 10px; color: white; -webkit-font-smoothing: antialiased; opacity: 1; }
 #currentTime{
   left: -10px;
   top: 20px;

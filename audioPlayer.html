@@ -28,12 +28,12 @@
                       <div id="currentTime" ng-bind="currentTime | time">00:00</div>
                       <div id="totalTime" ng-bind="totalTime | time">00:00</div>
                   </div>
-                  <div class="loop"></div>
+                  <div class="loop" ng-click="toggleLoop(0)"></div>
               </div>
               <div class="playPause">
-                  <div class="prev"></div>
+                  <div class="prev" ng-click="restartSong()" ng-dblclick="prevSong()"></div>
                   <div class="play_pause" ng-click="togglePlay(0)"></div>
-                  <div class="next"></div>
+                  <div class="next" ng-click="nextSong()"></div>
               </div>
           </div>
 
@@ -47,8 +47,6 @@
 
       <!-- AUDIO UI SCRIPTS -->
       <script src="javascripts/audio.js"></script>
-
-
 
   </body>
 </html>

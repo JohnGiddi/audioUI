@@ -25,10 +25,8 @@
       $scope.toLoop = false;
       $scope.toShuffle = false;
       $scope.isDragging = false;
-      // $scope.scrubTop = -1000;
-      // $scope.scrubLeft = -1000;
       $scope.seekingTime;
-      $scope.songPlay = $scope.playList[$scope.songCount].song;
+
 
 
       // $http.get('../js/data.json').success(function(data){
@@ -37,10 +35,17 @@
 
       $interval(function () {
         if($scope.audioSource.ended == true && $scope.songCount < $scope.playList.length - 1){
-          $scope.songCount += 1;
-          $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
-          $scope.audioSource.play();
-          $scope.isPlaying  = true;
+          if(!$scope.isDragging){
+            $scope.songCount += 1;
+            $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+            $scope.audioSource.play();
+            $scope.isPlaying  = true;
+          }
+        }
+        if($scope.songCount == $scope.playList.length -1 && $scope.audioSource.ended == true && $scope.toLoop == true){
+          console.log('i\'m looping');
+          loop();
+          count = 0;
         }
         if($scope.audioSource.ended == true && $scope.songCount == $scope.playList.length -1){
           $('.play_pause').removeClass('pause');
@@ -56,12 +61,14 @@
             $scope.scrubLeft = document.getElementById('thumbScrubber').offsetLeft;
         }
 
-        $scope.updateLayout();
+        // $scope.updateLayout();
       }, 100);
 
       $scope.initPlayer = function(){
           $scope.currentTime = 0;
           $scope.totalTime = 0;
+          $scope.songPlay = $scope.playList[$scope.songCount].song;
+          $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
           $scope.audioSource.addEventListener("timeupdate", $scope.updateTime, true);
           $scope.audioSource.addEventListener("loadedmetadata", $scope.updateData, true);
       };
@@ -82,23 +89,18 @@
           }
       };
 
-      $scope.togglePlay = function(count){
-        if($scope.audioSource.paused && count == 0){
-            $scope.audioSource.play();
-            $scope.isPlaying = true;
-            $(".play_pause").toggleClass('pause');
-            count = 1;
-        } else {
-            $scope.audioSource.pause();
-            $scope.isPlaying = false;
-            $(".play_pause").toggleClass('pause');
-            count = 0;
-        }
-      };
+      // UPPER AUDIO CONTROLS SHUFFLE, SEEK, LOOP //
 
       $scope.mouseMoving = function($event){
-          if($scope.isDragging){
-            $("#thumbScrubber").offset({left:$event.pageX - 6});
+          if($scope.isDragging && $scope.currentTime <= $scope.totalTime){
+            var mX = 0, limitX = $('#progressMeter').width();
+            var offset = $('#progressMeter').offset();
+            var halfContWidth = $('#progressMeter').width()/2;
+            mX = Math.min($event.pageX - offset.left, limitX);
+            if (mX < 0) mX = 0;
+
+            $("#thumbScrubber").css({left:mX-5});
+
             var w = $('#progressMeter').outerWidth();
             var parentOffset = $('#progressBar').parent().offset();
             var mouseX = $event.pageX - parentOffset.left;
@@ -135,6 +137,74 @@
           var s = Math.round(mouseX / w * d);
           $scope.audioSource.currentTime = s;
       };
+
+      $scope.loopPlaylist = function(){
+
+      }
+      $scope.toggleLoop = function(count){
+
+      }
+
+      // LOWER AUDIO CONTROLLERS PLAY, NEXT, PREV //
+
+      $scope.togglePlay = function(count){
+        if($scope.audioSource.paused && count == 0){
+            $scope.audioSource.play();
+            $scope.isPlaying = true;
+            $(".play_pause").toggleClass('pause');
+            count = 1;
+        } else {
+            $scope.audioSource.pause();
+            $scope.isPlaying = false;
+            $(".play_pause").toggleClass('pause');
+            count = 0;
+        }
+      };
+
+      $scope.nextSong = function(){
+          if (count < $scope.playList.length){
+              count += 1;
+          }
+          if ($scope.songCount < $scope.playList.length - 1){
+              $scope.songCount += 1;
+              $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+              $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+              $('.play_pause').addClass('pause');
+              $scope.audioSource.play();
+              $scope.isPlaying = true;
+          }
+          if (count == $scope.playList.length && $scope.toLoop == true){
+              loop();
+              count = 0; // allows loop to happen when click next
+              console.log('i\'m looping');
+          }
+              console.log($scope.songCount + "song");
+              console.log(count + "count");
+      };
+
+
+      $scope.restartSong = function(){
+          $scope.audioSource.currentTime = 0;
+      };
+      $scope.prevSong = function(){
+          if ($scope.songCount > 0){
+              $scope.songCount -= 1;
+              count = $scope.songCount;
+              $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+              $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+              $scope.audioSource.play();
+              $scope.isPlaying = true;
+              $('.play_pause').addClass('pause');
+              if ($scope.songCount == 0){
+                  $scope.songCount = 0;
+              }
+          }
+          console.log($scope.songCount + "song");
+          console.log(count + "count");
+      };
+
+
+
 
       // $("#progressBar").click(function(e){
       //    var parentOffset = $(this).parent().offset();
@@ -366,19 +436,3 @@
 //         audioSource.volume = audioRange;
 // });
 //
-//
-// $('#thumbScrubber').on('mouseover', function(){
-//     $('#currentTime').animate({opacity: 1},300);
-//     $('#totalTime').animate({opacity: 1},300);
-// });
-// $('#thumbScrubber').on('mouseout', function(){
-//     $('#currentTime').animate({opacity: 0},300);
-//     $('#totalTime').animate({opacity: 0},300);
-// });
-//
-//
-//
-// function timeFilter(seconds){
-//     var mm = Math.floor(seconds / 60) % 60, ss = Math.floor(seconds) % 60;
-//     return (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss;
-// };
