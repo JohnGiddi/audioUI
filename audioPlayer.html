@@ -14,10 +14,26 @@
           <input id="rangeValue" type="text" style="width: 50px;">
       </div> -->
 
-      <div class="playerContainer unselectable ng-cloak" ng-mousemove="mouseMoving($event)" ng-mouseup="dragStop($event)" ng-mouseover="marquee()">
+      <div class="playerContainer unselectable ng-cloak" ng-mousemove="mouseMoving($event)" ng-mouseup="dragStop($event)">
           <audio id="audio" src="{{songPlay}}"></audio>
           <div class="imageDisplay">
+              <div class="hamIcon" ng-click="showDetails()">
+                  <div class="top"></div>
+                  <div class="middle"></div>
+                  <div class="bottom"></div>
+              </div>
               <div class="shadow"></div>
+          </div>
+          <div class="audioPlaylist" ng-show="showPlaylist">
+            <div class="nowPlaying">
+
+                <h2>Now Playing</h2>
+                <p ng-bind="playList[songCount].description"></p>
+                <p class="duration"><em ng-bind="currentTime | time">00:00</em> / <em ng-bind="totalTime | time">00:00</em></p>
+                <div class="arrow" ng-click="hideDetails()"></div>
+                <div class="listShadow"></div>
+            </div>
+
           </div>
 
           <div class="controlsContainer" >

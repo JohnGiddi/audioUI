@@ -23,6 +23,7 @@
       $scope.toShuffle = false;
       $scope.isDragging = false;
       $scope.seekingTime;
+      $scope.showPlaylist = false;
 
 
 
@@ -54,9 +55,14 @@
             var d = $scope.audioSource.duration;
             var w = t / d * 100;
             var p = document.getElementById('progressMeter').offsetWidth;
-            $scope.scrubLeft = (t / d * p);
+            $scope.scrubLeft = (t / d * p) - 5;
         }else {
             $scope.scrubLeft = document.getElementById('thumbScrubber').offsetLeft;
+        }
+        if($scope.audioSource.ended == true){
+            $scope.marqueeRemove();
+        } else {
+            $scope.marqueeStart();
         }
 
 
@@ -92,7 +98,7 @@
               mX = Math.min($event.pageX - offset.left, limitX);
               if (mX < 0) mX = 0;
 
-              $("#thumbScrubber").css({left:mX-5});
+              $("#thumbScrubber").css({left:mX - 5});
 
               var w = $('#progressMeter').outerWidth();
               var parentOffset = $('#progressBar').parent().offset();
@@ -116,8 +122,8 @@
               $scope.videoSeek($event);
               $scope.isDragging = false;
               $scope.audioSource.play();
-              $("#thumbScrubber").removeClass('largeScrubber');
               $('.play_pause').addClass('pause');
+              $("#thumbScrubber").removeClass('largeScrubber');
               console.log("dragStop");
           }
       };
@@ -177,7 +183,6 @@
             $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
             $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
             $('.play_pause').addClass('pause');
-            $('.songDescription').removeClass('marquee').addClass('marquee');
             $scope.audioSource.play();
             $scope.isPlaying = true;
         }
@@ -211,19 +216,18 @@
         console.log(count + "count");
       };
 
+      $('.nowPlaying').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
 
-      $scope.marquee = function(){
+      $scope.marqueeStart = function(){
           $('.songDescription:nth-child(1)').addClass('marquee');
           $('.songDescription:nth-child(2)').addClass('marqueetwo');
       };
 
-      // $("#progressBar").click(function(e){
-      //    var parentOffset = $(this).parent().offset();
-      //    //or $(this).offset(); if you really just want the current element's offset
-      //    var relX = e.pageX - parentOffset.left;
-      //    var relY = e.pageY - parentOffset.top;
-      //    console.log(relX);
-      // });
+      $scope.marqueeRemove = function(){
+          $('.songDescription:nth-child(1)').removeClass('marquee');
+          $('.songDescription:nth-child(2)').removeClass('marqueetwo');
+      };
+
 
       // $scope.videoSelected = function(i){
       //     $scope.titleDisplay = $scope.playList[i].title;
@@ -236,29 +240,15 @@
       //     $scope.showOptions = false;
       // };
 
+      $scope.showDetails = function(){
+          $scope.showPlaylist = true;
+          $('.audioPlaylist').css({opacity: 1});
+      };
+      $scope.hideDetails = function(){
+          $scope.showPlaylist = false;
+          $('.audioPlaylist').css({opacity: 0});
+      };
 
-
-
-      // $scope.toggleDetails = function(){
-      //     if ($scope.showOptions) {
-      //         $scope.showOptions = false;
-      //     } else {
-      //         $scope.showOptions = true;
-      //     }
-      // };
-
-
-      // $scope.toggleMute = function(){
-      //   if($scope.audioSource.volume == 0.0){
-      //       $scope.audioSource.volume = 1.0;
-      //       $('#muteBtn').children("span").toggleClass("glyphicon-volume-up");
-      //       $('#muteBtn').children("span").toggleClass("glyphicon-volume-off");
-      //   } else {
-      //       $scope.audioSource.volume = 0.0;
-      //       $('#muteBtn').children("span").toggleClass("glyphicon-volume-up");
-      //       $('#muteBtn').children("span").toggleClass("glyphicon-volume-off");
-      //   }
-      // };
       $scope.getNumber = function(num) {
           return new Array(num);
       }
