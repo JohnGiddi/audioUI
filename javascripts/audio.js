@@ -1,20 +1,17 @@
 (function(){
   var app = angular.module('audioApp', []);
 
-  app.controller('AudioController', ['$scope', '$window', '$interval', '$http', function($scope,$window,$interval,$http){
+  app.controller('AudioController', ['$scope', '$interval', '$http', function($scope,$interval,$http){
 
 
       // songs playlist
       $scope.playList = [
-        { song: "playlist/compton.mp3", image: "images/nwa.jpg"},
-        { song: "playlist/get_lucky.mp4", image: "images/daftpunk.jpg"},
-        { song: "playlist/play_that_funky.mp3", image: "images/wildcherry.jpg"},
-        { song: "playlist/standing.m4a", image: "images/empireofsun.jpg"}
+        { song: "playlist/compton.mp3", description: "N.W.A:  Straight Outta Compton", image: "images/nwa.jpg"},
+        { song: "playlist/get_lucky.mp4", description: "Daft Punk:  Get Lucky", image: "images/daftpunk.jpg"},
+        { song: "playlist/play_that_funky.mp3", description: "Wild Cherry:  Play That Funky Music", image: "images/wildcherry.jpg"},
+        { song: "playlist/standing.m4a", description: "Empire Of The Sun:  Standing On The Shore", image: "images/empireofsun.jpg"}
       ]
-      // $scope.videoSource = $window.videoSource;
-      // $scope.titleDisplay = $window.titleDisplay;
-      // $scope.videoDescription = $window.videoDescription;
-      // audio defaults
+
       var count = 0; // global variable that allow looping use by setInterval, next, prev functions
       $scope.songCount = 0; // global variable used by number of functions
       $scope.songVolume = .5;
@@ -38,13 +35,14 @@
           if(!$scope.isDragging){
             $scope.songCount += 1;
             $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+            $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
             $scope.audioSource.play();
             $scope.isPlaying  = true;
           }
         }
         if($scope.songCount == $scope.playList.length -1 && $scope.audioSource.ended == true && $scope.toLoop == true){
           console.log('i\'m looping');
-          loop();
+          $scope.loopPlaylist();
           count = 0;
         }
         if($scope.audioSource.ended == true && $scope.songCount == $scope.playList.length -1){
@@ -61,7 +59,7 @@
             $scope.scrubLeft = document.getElementById('thumbScrubber').offsetLeft;
         }
 
-        // $scope.updateLayout();
+
       }, 100);
 
       $scope.initPlayer = function(){
@@ -83,30 +81,25 @@
           $scope.totalTime = e.target.duration;
       };
 
-      $scope.updateLayout = function(e){
-          if(!$scope.$$phase){
-              $scope.$apply();
-          }
-      };
 
       // UPPER AUDIO CONTROLS SHUFFLE, SEEK, LOOP //
 
       $scope.mouseMoving = function($event){
           if($scope.isDragging && $scope.currentTime <= $scope.totalTime){
-            var mX = 0, limitX = $('#progressMeter').width();
-            var offset = $('#progressMeter').offset();
-            var halfContWidth = $('#progressMeter').width()/2;
-            mX = Math.min($event.pageX - offset.left, limitX);
-            if (mX < 0) mX = 0;
+              var mX = 0, limitX = $('#progressMeter').width();
+              var offset = $('#progressMeter').offset();
+              var halfContWidth = $('#progressMeter').width()/2;
+              mX = Math.min($event.pageX - offset.left, limitX);
+              if (mX < 0) mX = 0;
 
-            $("#thumbScrubber").css({left:mX-5});
+              $("#thumbScrubber").css({left:mX-5});
 
-            var w = $('#progressMeter').outerWidth();
-            var parentOffset = $('#progressBar').parent().offset();
-            var mouseX = $event.pageX - parentOffset.left;
-            var d = $scope.audioSource.duration;
-            var s = Math.round(mouseX / w * d);
-            $scope.audioSource.currentTime = s;
+              var w = $('#progressMeter').outerWidth();
+              var parentOffset = $('#progressBar').parent().offset();
+              var mouseX = $event.pageX - parentOffset.left;
+              var d = $scope.audioSource.duration;
+              var s = Math.round(mouseX / w * d);
+              $scope.audioSource.currentTime = s;
           }
       };
 
@@ -139,11 +132,23 @@
       };
 
       $scope.loopPlaylist = function(){
+          $scope.songCount = 0;
+          $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+          $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+          $scope.audioSource.play();
+          return $scope.songCount;
+      };
 
-      }
-      $scope.toggleLoop = function(count){
-
-      }
+      $scope.toggleLoop = function(){
+        $('.loop').toggleClass('loopActive');
+        if (!$scope.toLoop){
+            $scope.toLoop = true;
+            console.log('to loop');
+        } else {
+            $scope.toLoop = false;
+            console.log('not to loop');
+        }
+      };
 
       // LOWER AUDIO CONTROLLERS PLAY, NEXT, PREV //
 
@@ -153,58 +158,64 @@
             $scope.isPlaying = true;
             $(".play_pause").toggleClass('pause');
             count = 1;
+            console.log(count);
         } else {
             $scope.audioSource.pause();
             $scope.isPlaying = false;
             $(".play_pause").toggleClass('pause');
             count = 0;
+            console.log(count);
         }
       };
 
       $scope.nextSong = function(){
-          if (count < $scope.playList.length){
-              count += 1;
-          }
-          if ($scope.songCount < $scope.playList.length - 1){
-              $scope.songCount += 1;
-              $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
-              $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
-              $('.play_pause').addClass('pause');
-              $scope.audioSource.play();
-              $scope.isPlaying = true;
-          }
-          if (count == $scope.playList.length && $scope.toLoop == true){
-              loop();
-              count = 0; // allows loop to happen when click next
-              console.log('i\'m looping');
-          }
-              console.log($scope.songCount + "song");
-              console.log(count + "count");
+        if (count < $scope.playList.length){
+            count += 1;
+        }
+        if ($scope.songCount < $scope.playList.length - 1){
+            $scope.songCount += 1;
+            $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+            $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+            $('.play_pause').addClass('pause');
+            $('.songDescription').removeClass('marquee').addClass('marquee');
+            $scope.audioSource.play();
+            $scope.isPlaying = true;
+        }
+        if (count == $scope.playList.length && $scope.toLoop == true){
+            $scope.loopPlaylist();
+            count = 0; // allows loop to happen when click next
+            console.log('i\'m looping');
+        }
+            console.log($scope.songCount + "song");
+            console.log(count + "count");
       };
 
 
       $scope.restartSong = function(){
-          $scope.audioSource.currentTime = 0;
+        $scope.audioSource.currentTime = 0;
       };
       $scope.prevSong = function(){
-          if ($scope.songCount > 0){
-              $scope.songCount -= 1;
-              count = $scope.songCount;
-              $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
-              $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
-              $scope.audioSource.play();
-              $scope.isPlaying = true;
-              $('.play_pause').addClass('pause');
-              if ($scope.songCount == 0){
-                  $scope.songCount = 0;
-              }
-          }
-          console.log($scope.songCount + "song");
-          console.log(count + "count");
+        if ($scope.songCount > 0){
+            $scope.songCount -= 1;
+            count = $scope.songCount;
+            $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+            $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+            $scope.audioSource.play();
+            $scope.isPlaying = true;
+            $('.play_pause').addClass('pause');
+            if ($scope.songCount == 0){
+                $scope.songCount = 0;
+            }
+        }
+        console.log($scope.songCount + "song");
+        console.log(count + "count");
       };
 
 
-
+      $scope.marquee = function(){
+          $('.songDescription:nth-child(1)').addClass('marquee');
+          $('.songDescription:nth-child(2)').addClass('marqueetwo');
+      };
 
       // $("#progressBar").click(function(e){
       //    var parentOffset = $(this).parent().offset();
@@ -248,6 +259,9 @@
       //       $('#muteBtn').children("span").toggleClass("glyphicon-volume-off");
       //   }
       // };
+      $scope.getNumber = function(num) {
+          return new Array(num);
+      }
 
       $scope.initPlayer();
 

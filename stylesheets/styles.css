@@ -3,7 +3,7 @@
 body{
   margin: 0px;
   padding: 0px;
-
+  -webkit-font-smoothing: antialiased;
 }
 .unselectable{
   -moz-user-select: -moz-none;
@@ -88,7 +88,6 @@ body{
 }
 #progressBar{
   position: relative;
-  cursor: pointer;
   width: 250px;
   height: 1px;
   top: 5px;
@@ -114,7 +113,7 @@ body{
   transition: .1s;
 }
 
-#currentTime, #totalTime{ position: absolute; font-family: Helvetica, Arial, sans-serif; font-size: 10px; color: white; -webkit-font-smoothing: antialiased; opacity: 1; }
+#currentTime, #totalTime{ position: absolute; font-family: Helvetica, Arial, sans-serif; font-size: 10px; color: white; opacity: 1; }
 #currentTime{
   left: -10px;
   top: 20px;
@@ -123,6 +122,41 @@ body{
   right: -10px;
   top: 20px;
 }
+
+.descriptionCtn{
+  position: relative;
+  top: 20px;
+  margin: 0px auto;
+  overflow: hidden;
+  width: 115px;
+  height: 20px;
+}
+.songDescription{
+  position: absolute;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  color: white;
+  text-align: center;
+  white-space: nowrap;
+  display: inline;
+  padding-right: 15px;
+  line-height: 22px;
+}
+.songDescription:nth-child(1){
+  transform: translateX(0%);
+}
+.songDescription:nth-child(2){
+  transform: translateX(100%);
+}
+.marquee{
+  animation: marquee 10s ease infinite;
+  -webkit-animation: marquee 10s ease infinite;
+}
+.marqueetwo{
+  animation: marqueetwo 10s ease infinite;
+  -webkit-animation: marqueetwo 10s ease infinite;
+}
+
 
 
 
@@ -158,4 +192,36 @@ body{
 .pause{
   background: url("../images/pause.png") no-repeat 0px 0px;
   background-size: contain;
+}
+
+
+/*Marquee animation*/
+@keyframes marquee {
+     0%{
+        transform: translateX(0%);
+     }
+     20%{
+        transform: translateX(0%);
+     }
+     40%{
+        transform: translateX(0%);
+     }
+     100%{
+         transform: translateX(-100%);
+     }
+}
+
+@keyframes marqueetwo {
+     0%{
+        transform: translateX(100%);
+     }
+     20%{
+        transform: translateX(100%);
+     }
+     40%{
+        transform: translateX(100%);
+     }
+     100%{
+         transform: translateX(0%);
+     }
 }

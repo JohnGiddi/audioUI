@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Audio User Interface</title>
 <link  rel="stylesheet"  href="stylesheets/styles.css">
 </head>
@@ -13,22 +14,25 @@
           <input id="rangeValue" type="text" style="width: 50px;">
       </div> -->
 
-      <div class="playerContainer unselectable ng-cloak" ng-mousemove="mouseMoving($event)" ng-mouseup="dragStop($event)" >
+      <div class="playerContainer unselectable ng-cloak" ng-mousemove="mouseMoving($event)" ng-mouseup="dragStop($event)" ng-mouseover="marquee()">
           <audio id="audio" src="{{songPlay}}"></audio>
           <div class="imageDisplay">
               <div class="shadow"></div>
           </div>
 
-          <div class="controlsContainer">
+          <div class="controlsContainer" >
               <div class="topControls">
                   <div class="shuffle"></div>
                   <div id="progressMeter" >
                       <div id="progressBar"></div>
-                      <div id="thumbScrubber" ng-mousedown="dragStart($event)" style="left:{{scrubLeft}}px;"></div>
+                      <div id="thumbScrubber" ng-mousedown="dragStart($event)"  style="left:{{scrubLeft}}px;"></div>
                       <div id="currentTime" ng-bind="currentTime | time">00:00</div>
                       <div id="totalTime" ng-bind="totalTime | time">00:00</div>
                   </div>
-                  <div class="loop" ng-click="toggleLoop(0)"></div>
+                  <div class="loop" ng-click="toggleLoop()"></div>
+              </div>
+              <div class="descriptionCtn">
+                  <div class="songDescription" ng-repeat="i in getNumber(2) track by $index" ng-bind="playList[songCount].description"></div>
               </div>
               <div class="playPause">
                   <div class="prev" ng-click="restartSong()" ng-dblclick="prevSong()"></div>
