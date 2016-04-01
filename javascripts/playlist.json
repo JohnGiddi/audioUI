@@ -1,0 +1,6 @@
+[
+  { "song": "playlist/compton.mp3", "description": "N.W.A:  Straight Outta Compton", "image": "images/nwa.jpg"},
+  { "song": "playlist/get_lucky.mp4", "description": "Daft Punk:  Get Lucky", "image": "images/daftpunk.jpg"},
+  { "song": "playlist/play_that_funky.mp3", "description": "Wild Cherry:  Play That Funky Music", "image": "images/wildcherry.jpg"},
+  { "song": "playlist/standing.m4a", "description": "Empire Of The Sun:  Standing On The Shore", "image": "images/empireofsun.jpg"}
+]
