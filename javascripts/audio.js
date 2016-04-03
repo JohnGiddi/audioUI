@@ -1,7 +1,7 @@
 (function(){
   var app = angular.module('audioApp', []);
 
-  app.controller('AudioController', ['$scope', '$interval', '$http', function($scope,$interval,$http){
+  app.controller('AudioController', ['$scope', '$interval', '$http', '$window', function($scope,$interval,$http,$window){
 
 
       // songs playlist
@@ -27,7 +27,8 @@
       $scope.toShuffle = false;
       $scope.isDragging = false;
       $scope.seekingTime;
-      $scope.showPlaylist = false;
+      $scope.showPlaylist = true;
+
 
 
 
@@ -201,6 +202,8 @@
         }
             console.log($scope.songCount + "song");
             console.log(count + "count");
+            var el = $('li.pickSong');
+            $(el[$scope.songCount]).addClass('listActive').siblings().removeClass('listActive');
       };
 
 
@@ -223,8 +226,9 @@
         }
         console.log($scope.songCount + "song");
         console.log(count + "count");
+        var el = $('li.pickSong');
+        $(el[$scope.songCount]).addClass('listActive').siblings().removeClass('listActive');
       };
-
 
 
       $scope.marqueeStart = function(){
@@ -238,28 +242,33 @@
       };
 
 
-      // $scope.videoSelected = function(i){
-      //     $scope.titleDisplay = $scope.playList[i].title;
-      //     $scope.videoDescription = $scope.playList[i].description;
-      //     $scope.videoSource = $scope.playList[i].path;
-      //     $scope.audioSource.load($scope.videoSource);
-      //     $scope.isPlaying = false;
-      //     $('#playBtn').children("span").toggleClass("glyphicon-play", true);
-      //     $('#playBtn').children("span").toggleClass("glyphicon-pause", false);
-      //     $scope.showOptions = false;
-      // };
-
       $scope.showDetails = function(){
           $scope.showPlaylist = true;
           $scope.marqueeRemove();
           $('.audioPlaylist').css({left: 0, opacity: 1}).fadeIn();
       };
+
       $scope.hideDetails = function(){
           $scope.marqueeStart();
           $('.audioPlaylist').animate({left: -100 + "%"}, 500, function(){
               $scope.showPlaylist = false;
           });
       };
+
+      $scope.audioSelected = function(i,event){
+          $scope.songCount = i;
+          $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+          $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+          $('.nowPlaying').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+          $('.play_pause').addClass('pause');
+          $(event.target).addClass('listActive').siblings().removeClass('listActive');
+          $scope.audioSource.play();
+          $scope.isPlaying = true;
+      };
+
+
+
+
 
       $scope.getNumber = function(num) {
           return new Array(num);
@@ -276,6 +285,17 @@
       return (mm < 10 ? "0" : "") + mm + ":" + (ss < 10 ? "0" : "") + ss;
     }
   });
+
+  // app.directive('active', function() {
+  //   return {
+  //       link: function(scope,element) {
+  //           element.addClass('listActive');
+  //       }
+  //   };
+  // })
+
+
+
 
 
 })(); // END OF CLOSURE

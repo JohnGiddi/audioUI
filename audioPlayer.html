@@ -34,11 +34,7 @@
             </div>
             <div class="songList">
                 <ol>
-                  <li ng-repeat="index in playList" ng-bind="index.description">
-
-
-
-                  </li>
+                  <li class="pickSong" ng-repeat="index in playList" is-loaded active ng-bind="index.description" ng-click="audioSelected($index,$event)"></li>
                 </ol>
             </div>
 
