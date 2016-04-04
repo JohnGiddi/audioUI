@@ -144,6 +144,8 @@
           $scope.audioSource.currentTime = s;
       };
 
+      // LOOP AND SHUFFLE FUCNTIONS
+
       $scope.loopPlaylist = function(){
           $scope.songCount = 0;
           $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
@@ -161,6 +163,17 @@
         } else {
             $scope.toLoop = false;
             console.log('not to loop');
+        }
+      };
+
+      $scope.toggleShuffle = function(){
+        $('.shuffle').toggleClass('shuffleActive');
+        if (!$scope.toShuffle){
+            $scope.toShuffle = true;
+            console.log('to shuffle');
+        } else {
+            $scope.toShuffle = false;
+            console.log('not to shuffle');
         }
       };
 
@@ -202,7 +215,7 @@
         }
             console.log($scope.songCount + "song");
             console.log(count + "count");
-            var el = $('li.pickSong');
+            var el = $('li.pickSong'); // fix this here and line below
             $(el[$scope.songCount]).addClass('listActive').siblings().removeClass('listActive');
       };
 
@@ -226,7 +239,7 @@
         }
         console.log($scope.songCount + "song");
         console.log(count + "count");
-        var el = $('li.pickSong');
+        var el = $('li.pickSong'); // fix this here and line below
         $(el[$scope.songCount]).addClass('listActive').siblings().removeClass('listActive');
       };
 
@@ -266,19 +279,17 @@
           $scope.isPlaying = true;
       };
 
-
-
-
-
+      // HELPER FUCNTION TO LIMIT ngREPEAT
       $scope.getNumber = function(num) {
           return new Array(num);
       }
 
+      // INITIALIZE THE AUDIO PLAYER
       $scope.initPlayer();
 
   }]); // end of controller
 
-
+  // FILTER TO DISPLAY TIME IN 12 HOUR FORMAT
   app.filter('time', function(){
     return function(seconds){
       var mm = Math.floor(seconds / 60) % 60, ss = Math.floor(seconds) % 60;
@@ -286,19 +297,7 @@
     }
   });
 
-  // app.directive('active', function() {
-  //   return {
-  //       link: function(scope,element) {
-  //           element.addClass('listActive');
-  //       }
-  //   };
-  // })
-
-
-
-
-
-})(); // END OF CLOSURE
+})(); // END OF SELF CALL CLOSURE
 
 
 // // function shuffle(count) {
