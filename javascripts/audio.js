@@ -9,16 +9,12 @@
         { song: "playlist/compton.mp3", description: "N.W.A:  Straight Outta Compton", image: "images/nwa.jpg"},
         { song: "playlist/get_lucky.mp4", description: "Daft Punk:  Get Lucky", image: "images/daftpunk.jpg"},
         { song: "playlist/play_that_funky.mp3", description: "Wild Cherry:  Play That Funky Music", image: "images/wildcherry.jpg"},
-        { song: "playlist/standing.m4a", description: "Empire Of The Sun:  Standing On The Shore", image: "images/empireofsun.jpg"},
-        { song: "playlist/compton.mp3", description: "N.W.A:  Straight Outta Compton", image: "images/nwa.jpg"},
-        { song: "playlist/get_lucky.mp4", description: "Daft Punk:  Get Lucky", image: "images/daftpunk.jpg"},
-        { song: "playlist/play_that_funky.mp3", description: "Wild Cherry:  Play That Funky Music", image: "images/wildcherry.jpg"},
         { song: "playlist/standing.m4a", description: "Empire Of The Sun:  Standing On The Shore", image: "images/empireofsun.jpg"}
       ]
 
-      var count = 0; // global variable that allow looping use by setInterval, next, prev functions
+      var count = 0; // global variable that allows looping use by setInterval, next, prev functions and audioSelected
       $scope.songCount = 0; // global variable used by number of functions
-      $scope.songVolume = .5;
+      $scope.songVolume = 1;
       $scope.audioSource = document.getElementById('audio');
       $scope.isPlaying = false;
       $scope.currentTime;
@@ -27,7 +23,10 @@
       $scope.toShuffle = false;
       $scope.isDragging = false;
       $scope.seekingTime;
-      $scope.showPlaylist = true;
+      $scope.showPlaylist = false;
+      // var el = document.getElementsByClassName('pickSong'); // fix this here and line below
+      // $(el).css('color', 'red');
+      // console.log(el);
 
 
 
@@ -71,7 +70,6 @@
             $scope.marqueeStart();
         }
 
-
       }, 100);
 
       $scope.initPlayer = function(){
@@ -97,7 +95,7 @@
 
       // UPPER AUDIO CONTROLS SHUFFLE, SEEK, LOOP //
 
-      $scope.mouseMoving = function($event){
+      $scope.mouseMoving = function($event){ // refactor this FUCNTION
           if($scope.isDragging && $scope.currentTime <= $scope.totalTime){
               var mX = 0, limitX = $('#progressMeter').width();
               var offset = $('#progressMeter').offset();
@@ -166,6 +164,24 @@
         }
       };
 
+      $scope.shufflePlaylist = function() {
+        if ($scope.toShuffle == true) {
+          var randSong = Math.floor(Math.random() * $scope.playList.length);
+          while ($scope.songCount  == randSong){
+          	randSong = Math.floor(Math.random() * $scope.playList.length);
+          }
+            $scope.songCount = randSong;
+            count = randSong
+            $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+            $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+            $('.nowPlaying').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+            $scope.audioSource.play();
+            console.log(randSong);
+            console.log(count);
+        }
+      };
+
+
       $scope.toggleShuffle = function(){
         $('.shuffle').toggleClass('shuffleActive');
         if (!$scope.toShuffle){
@@ -178,45 +194,45 @@
       };
 
       // LOWER AUDIO CONTROLLERS PLAY, NEXT, PREV //
-
       $scope.togglePlay = function(count){
-        if($scope.audioSource.paused && count == 0){
-            $scope.audioSource.play();
-            $scope.isPlaying = true;
-            $(".play_pause").toggleClass('pause');
-            count = 1;
-            console.log(count);
-        } else {
-            $scope.audioSource.pause();
-            $scope.isPlaying = false;
-            $(".play_pause").toggleClass('pause');
-            count = 0;
-            console.log(count);
-        }
+          if($scope.audioSource.paused && count == 0){
+              $scope.audioSource.play();
+              $scope.isPlaying = true;
+              $(".play_pause").toggleClass('pause');
+              count = 1;
+              console.log($scope.isPlaying);
+          } else {
+              $scope.audioSource.pause();
+              $scope.isPlaying = false;
+              $(".play_pause").toggleClass('pause');
+              count = 0;
+              console.log($scope.isPlaying);
+          }
       };
 
       $scope.nextSong = function(){
-        if (count < $scope.playList.length){
-            count += 1;
-        }
-        if ($scope.songCount < $scope.playList.length - 1){
-            $scope.songCount += 1;
-            $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
-            $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
-            $('.nowPlaying').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
-            $('.play_pause').addClass('pause');
-            $scope.audioSource.play();
-            $scope.isPlaying = true;
-        }
-        if (count == $scope.playList.length && $scope.toLoop == true){
-            $scope.loopPlaylist();
-            count = 0; // allows loop to happen when click next
-            console.log('i\'m looping');
-        }
-            console.log($scope.songCount + "song");
-            console.log(count + "count");
-            var el = $('li.pickSong'); // fix this here and line below
-            $(el[$scope.songCount]).addClass('listActive').siblings().removeClass('listActive');
+          if (count < $scope.playList.length){
+              count += 1;
+          }
+          if ($scope.songCount < $scope.playList.length - 1 && $scope.toShuffle == false){
+              $scope.songCount += 1;
+              $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+              $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+              $('.nowPlaying').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+              $('.play_pause').addClass('pause');
+              $scope.audioSource.play();
+              $scope.isPlaying = true;
+          }
+          if (count == $scope.playList.length && $scope.toLoop == true){
+              $scope.loopPlaylist();
+              count = 0; // allows loop to happen when click next
+              console.log('i\'m looping');
+          }
+              console.log($scope.songCount + "song");
+              console.log(count + "count");
+              // var el = $('#pickSong'); // fix this here and line below
+              // $(el[$scope.songCount]).addClass('listActive').siblings().removeClass('listActive');
+              $scope.shufflePlaylist();
       };
 
 
@@ -239,8 +255,8 @@
         }
         console.log($scope.songCount + "song");
         console.log(count + "count");
-        var el = $('li.pickSong'); // fix this here and line below
-        $(el[$scope.songCount]).addClass('listActive').siblings().removeClass('listActive');
+        // var el = $('pickSong'); // fix this here and line below
+        // $(el[$scope.songCount]).addClass('listActive').siblings().removeClass('listActive');
       };
 
 
@@ -268,7 +284,7 @@
           });
       };
 
-      $scope.audioSelected = function(i,event){
+      $scope.audioSelected = function(i,event){ // count has to be fix here to move with songCount
           $scope.songCount = i;
           $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
           $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
@@ -277,6 +293,7 @@
           $(event.target).addClass('listActive').siblings().removeClass('listActive');
           $scope.audioSource.play();
           $scope.isPlaying = true;
+          count = i;
       };
 
       // HELPER FUCNTION TO LIMIT ngREPEAT
@@ -299,35 +316,6 @@
 
 })(); // END OF SELF CALL CLOSURE
 
-
-// // function shuffle(count) {
-// //
-// //       if (count === 1 && isPlaying != true){
-// //           var shuff = playList.sort(function() { return 0.5 - Math.random() });
-// //           $(audioSourceaudioSource).attr('src', shuff[songCount]);
-// //       }
-// //       else {
-// //           var org = playList = playList.sort();
-// //           $(audioSourceaudioSource).attr('src', org[songCount]);
-// //           count = 0;
-// //       }
-// // };
-//
-// function activeShuffle(count){
-//     $('.shuffle').on('click', function(){
-//         $(this).toggleClass('shuffleActive');
-//         if (count === 0){
-//             toShuffle = true;
-//             count = 1;
-//             console.log('shuffle');
-//         } else {
-//             toShuffle = false;
-//             count = 0;
-//             console.log('not to shuffle');
-//         }
-//     });
-// };
-// activeShuffle(0);
 
 // // volume range function
 // $('#slider1').on('mousemove', function(){
