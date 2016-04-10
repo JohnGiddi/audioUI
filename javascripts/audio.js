@@ -24,6 +24,7 @@
       $scope.isDragging = false;
       $scope.seekingTime;
       $scope.showPlaylist = false;
+
       // var el = document.getElementsByClassName('pickSong'); // fix this here and line below
       // $(el).css('color', 'red');
       // console.log(el);
@@ -172,20 +173,35 @@
       // this shuffle function needs to shuffle an aray that will be use a the songCount
       // ex: array = [0,1,2,3] shuffle it equals [2,0,1,3]
       // this way the user can have a shuffle playlist but will keep some order to the songs
-      $scope.shufflePlaylist = function() {
+      $scope.shufflePlaylist = function() { // refactor this FUCNTION
         if ($scope.toShuffle == true) {
-          var randSong = Math.floor(Math.random() * $scope.playList.length);
-          while ($scope.songCount  == randSong){
-          	randSong = Math.floor(Math.random() * $scope.playList.length);
-          }
-            $scope.songCount = randSong;
-            count = randSong
-            $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
-            $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
-            $('.nowPlaying').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
-            $scope.audioSource.play();
-            console.log(randSong);
-            console.log(count);
+            $scope.shuffleArray = [];
+            for (var i = 0; i < $scope.playList.length; i++){
+              	$scope.shuffleArray.push(i);
+            }
+            $scope.shuffleArray.sort(function(){ return 0.5 - Math.random()}).slice();
+            // $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
+            // $('.imageDisplay').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+            // $('.nowPlaying').css('background-image', 'url('+ $scope.playList[$scope.songCount].image +')');
+            // $scope.audioSource.play();
+
+            var playList = [0,1,2,3];
+            var currentSong = 2;
+            var shuffleArray = [];
+            var eI;
+                        for (var i = 0; i < playList.length; i++){
+                          	shuffleArray.push(i);
+                        }
+                        shuffleArray.sort(function(){ return 0.5 - Math.random()});
+                        for (var j = 0; j < shuffleArray.length; j++){
+                        	if (shuffleArray[j] == currentSong){
+                        		eI = j;
+                        	}
+                        }
+            var moveToEnd = shuffleArray.splice(eI,1);
+            shuffleArray.unshift(moveToEnd[0]);
+            console.log(shuffleArray);
+
         }
       };
 
@@ -195,6 +211,8 @@
         if (!$scope.toShuffle){
             $scope.toShuffle = true;
             console.log('to shuffle');
+            $scope.shufflePlaylist();
+            console.log($scope.shuffleArray);
         } else {
             $scope.toShuffle = false;
             console.log('not to shuffle');
@@ -240,14 +258,16 @@
               console.log(count + "count");
               // var el = $('#pickSong'); // fix this here and line below
               // $(el[$scope.songCount]).addClass('listActive').siblings().removeClass('listActive');
-              $scope.shufflePlaylist();
+              // $scope.shufflePlaylist();
       };
 
-
+      // get rid of this function
       $scope.restartSong = function(){
         $scope.audioSource.currentTime = 0;
       };
-      $scope.prevSong = function(){
+      // fix this FUCNTION to go back to beginning of song if currentTime > 5s
+      // and go to previous song if currentTime is < 5s
+      $scope.prevSong = function(){ // refactor this FUCNTION
         if ($scope.songCount > 0){
             $scope.songCount -= 1;
             count = $scope.songCount;
