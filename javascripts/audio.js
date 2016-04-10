@@ -36,7 +36,7 @@
       // });
 
       $interval(function () {
-        if($scope.audioSource.ended == true && $scope.songCount < $scope.playList.length - 1){
+        if($scope.audioSource.ended == true && $scope.songCount < $scope.playList.length - 1 && $scope.toShuffle == false){
           if(!$scope.isDragging){
             $scope.songCount += 1;
             $($scope.audioSource).attr('src', $scope.playList[$scope.songCount].song);
@@ -45,6 +45,12 @@
             $scope.audioSource.play();
             $scope.isPlaying  = true;
           }
+        }
+        if($scope.audioSource.ended == true && $scope.toShuffle == true){
+          if(!$scope.isDragging){
+            $scope.shufflePlaylist();
+          }
+
         }
         if($scope.songCount == $scope.playList.length -1 && $scope.audioSource.ended == true && $scope.toLoop == true){
           console.log('i\'m looping');
@@ -163,7 +169,9 @@
             console.log('not to loop');
         }
       };
-
+      // this shuffle function needs to shuffle an aray that will be use a the songCount
+      // ex: array = [0,1,2,3] shuffle it equals [2,0,1,3]
+      // this way the user can have a shuffle playlist but will keep some order to the songs
       $scope.shufflePlaylist = function() {
         if ($scope.toShuffle == true) {
           var randSong = Math.floor(Math.random() * $scope.playList.length);
